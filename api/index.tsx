@@ -306,12 +306,12 @@ app.frame('/result', async (c) => {
                   Builder Score
                 </Heading>
                 <Spacer size="22" />
-                <Text color="yellow" align="center" size="16">Beginner</Text>
+                <Text color="metalPink" align="center" size="16">Beginner</Text>
                 <Spacer size="10" />
                 <Box flexDirection="row" justifyContent="center">
                     <Text color="grey" align="center" size="16">@{username} have score</Text>
                     <Spacer size="10" />
-                    <Text color="yellow" align="center" size="16"> {score} 🎟️</Text>
+                    <Text color="metalPink" align="center" size="16"> {score} 🎟️</Text>
                 </Box>
                 <Spacer size="22" />
                 <Box flexDirection="row" justifyContent="center">
