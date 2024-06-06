@@ -340,7 +340,7 @@ app.frame('/result/:username', async (c) => {
       ),
       intents: [
         <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${id}`}>Share</Button.Link>,
-        <Button action='/search'>Back ⏏︎</Button>,
+        <Button action='/search'>Try it</Button>,
       ]
     });
   } catch (error) {
