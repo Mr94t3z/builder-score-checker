@@ -1,5 +1,6 @@
-import { Button, Frog, TextInput } from 'frog'
+import { Button, Frog } from 'frog'
 import { handle } from 'frog/vercel'
+import { neynar } from 'frog/middlewares'
 import { Box, Image, Heading, Text, VStack, Spacer, vars } from "../lib/ui.js";
 import dotenv from 'dotenv';
 
@@ -19,14 +20,21 @@ export const app = new Frog({
   assetsPath: '/',
   basePath: '/api/frame',
   ui: { vars },
-  browserLocation: CAST_INTENS
-  // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
-})
+  browserLocation: CAST_INTENS,
+}).use(
+  neynar({
+    apiKey: 'NEYNAR_FROG_FM',
+    features: ['interactor', 'cast'],
+  }),
+)
 
 
 // Initial frame
 app.frame('/', (c) => {
+  const { username } = c.var.interactor || {}
+    // console.log('cast: ', c.var.cast)
+    // console.log('interactor: ', c.var.interactor)
+    console.log('Username ', username)
   return c.res({
     image: (
       <Box
@@ -67,7 +75,7 @@ app.frame('/', (c) => {
       </Box>
     ),
     intents: [
-      <Button action='/search'>Search 🕵🏽</Button>,
+      <Button action='/search'>Start</Button>,
       <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
       // <Button.AddCastAction action='/builder-score'>
       //   Install Action ↓
@@ -207,6 +215,12 @@ app.frame('/', (c) => {
 
 
 app.frame('/search', async (c) => {
+  // const { username } = c.var.interactor || {}
+  //   console.log('cast: ', c.var.cast)
+  //   console.log('interactor: ', c.var.interactor)
+  //   console.log('Username ', username)
+
+  const username = 401992;
   return c.res({
     image: (
       <Box
@@ -235,7 +249,7 @@ app.frame('/search', async (c) => {
               </Heading>
               <Spacer size="22" />
               <Text align="center" color="grey" size="16">
-                Please insert Talent Passport ID to check the Builder Score.
+                Do you want to check your Builder Score?
               </Text>
               <Spacer size="22" />
               <Box flexDirection="row" justifyContent="center">
@@ -248,18 +262,20 @@ app.frame('/search', async (c) => {
       </Box>
     ),
     intents: [ 
-      <TextInput placeholder="Talent Passport ID e.g 401992" />,
-      <Button action='/result'>Submit ⇧</Button>,
-      <Button action='/'>Cancel ⏏︎</Button>,
+      // <TextInput placeholder="Talent Passport ID e.g 401992" />,
+      <Button action={`/result/${username}`}>Yes, please!</Button>,
+      <Button action='/'>Nope</Button>,
     ]
   })
 })
 
 
-app.frame('/result', async (c) => {
-  const { inputText } = c;
+app.frame('/result/:username', async (c) => {
+  // const { inputText } = c;
 
-  const id = inputText;
+  const { username } = c.req.param();
+
+  const id = username;
 
   try {
     // Fetch API by Talent Passport ID
@@ -323,7 +339,7 @@ app.frame('/result', async (c) => {
         </Box>
       ),
       intents: [
-        <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
+        <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${username}`}>Share</Button.Link>,
         <Button action='/search'>Back ⏏︎</Button>,
       ]
     });
@@ -352,11 +368,11 @@ app.frame('/result', async (c) => {
                 </Box>
                 <Spacer size="16" />
                 <Heading color="white" weight="900" align="center" size="32">
-                  ⚠️ Error ⚠️
+                  ⚠️ Failed ⚠️
                 </Heading>
                 <Spacer size="22" />
                 <Text align="center" color="grey" size="16">
-                   Uh oh, Talent Passport ID not found!
+                   Uh oh, you need to sign-up first!
                 </Text>
                 <Spacer size="22" />
                 <Box flexDirection="row" justifyContent="center">
@@ -369,6 +385,7 @@ app.frame('/result', async (c) => {
       ),
       intents: [
         <Button action='/search'>Try again ⏏︎</Button>,
+        <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
       ]
     });
   }
