@@ -293,6 +293,7 @@ app.frame('/result/:username', async (c) => {
     // console.log('Entire Data:', data);
 
     const username = data.passport.passport_profile.name;
+    const image = data.passport.passport_profile.image_url;
     const score = data.passport.score;
 
     return c.res({
@@ -317,30 +318,34 @@ app.frame('/result/:username', async (c) => {
                     Talent Protocol
                   </Text>
                 </Box>
-                <Spacer size="16" />
-                <Heading color="white" weight="900" align="center" size="32">
-                  Builder Score
-                </Heading>
                 <Spacer size="22" />
-                <Text color="metalPink" align="center" size="16">Beginner</Text>
+                <Box flexDirection="row" alignHorizontal="center" alignVertical="center">
+                <Image
+                    borderRadius="38"
+                    height="48"
+                    width="48"
+                    objectFit="cover"
+                    src={image}
+                  />
                 <Spacer size="10" />
-                <Box flexDirection="row" justifyContent="center">
-                    <Text color="grey" align="center" size="16">@{username} have score</Text>
-                    <Spacer size="10" />
-                    <Text color="metalPink" align="center" size="16"> {score} 🎟️</Text>
+                <Text color="metalPink" align="center" size="12">
+                  @{username}
+                </Text>
                 </Box>
                 <Spacer size="22" />
+                <Text color="grey" align="center" size="18">[ Beginner ]</Text>
+                <Spacer size="10" />
                 <Box flexDirection="row" justifyContent="center">
-                    <Text color="white" align="center" size="14">created by</Text>
+                    <Text color="metalPink" align="center" size="48">{score}</Text>
                     <Spacer size="10" />
-                    <Text color="grey" decoration="underline" align="center" size="14"> @0x94t3z</Text>
+                    <Text color="grey" align="center" size="14"> pts.</Text>
                 </Box>
             </VStack>
         </Box>
       ),
       intents: [
-        <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${id}`}>Share</Button.Link>,
         <Button action='/search'>Try it</Button>,
+        <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${id}`}>Share</Button.Link>,
       ]
     });
   } catch (error) {
