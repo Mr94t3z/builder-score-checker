@@ -194,13 +194,22 @@ app.frame('/builder-score-frame/:castFid', async (c) => {
                 </Box>
                 <Spacer size="12" />
                 <Box flexDirection="row" alignHorizontal="center" alignVertical="center">
-                <Image
-                  borderRadius="38"
-                  height="56"
-                  width="56"
-                  objectFit="cover"
-                  src={image}
-                />
+                <Box 
+                  borderStyle="solid" 
+                  borderRadius="42"
+                  borderWidth="4" 
+                  borderColor="metalPink" 
+                  height="64" 
+                  width="64" 
+                >
+                  <Image
+                    borderRadius="38"
+                    height="56"
+                    width="56"
+                    objectFit="cover"
+                    src={image}
+                  />
+                </Box>
                 <Spacer size="12" />
                   <Box flexDirection="column" alignHorizontal="left">
                     <Text color="white" align="left" size="16">
@@ -369,13 +378,22 @@ app.frame('/result/:eth_address', async (c) => {
                 </Box>
                 <Spacer size="12" />
                 <Box flexDirection="row" alignHorizontal="center" alignVertical="center">
-                <Image
-                  borderRadius="38"
-                  height="56"
-                  width="56"
-                  objectFit="cover"
-                  src={image}
-                />
+                <Box 
+                  borderStyle="solid" 
+                  borderRadius="42"
+                  borderWidth="4" 
+                  borderColor="metalPink" 
+                  height="64" 
+                  width="64" 
+                >
+                  <Image
+                    borderRadius="38"
+                    height="56"
+                    width="56"
+                    objectFit="cover"
+                    src={image}
+                  />
+                </Box>
                 <Spacer size="12" />
                   <Box flexDirection="column" alignHorizontal="left">
                     <Text color="white" align="left" size="16">
