@@ -95,7 +95,7 @@ app.frame('/', (c) => {
               </Heading>
               <Spacer size="22" />
               <Text align="center" color="grey" size="16">
-                A Frame to check Builder Score built with Talent Protocol.
+                A Frame & Cast Action to check Builder Score built with Talent Protocol.
               </Text>
               <Spacer size="22" />
               <Box flexDirection="row" justifyContent="center">
