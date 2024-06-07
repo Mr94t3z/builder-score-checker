@@ -53,7 +53,7 @@ app.frame('/', (c) => {
       <Box
           grow
           alignVertical="center"
-          backgroundColor="bg"
+          backgroundColor="black"
           padding="48"
           textAlign="center"
           height="100%"
@@ -140,7 +140,7 @@ app.frame('/', (c) => {
 //         <Box
 //             grow
 //             alignVertical="center"
-//             backgroundColor="bg"
+//             backgroundColor="black"
 //             padding="48"
 //             textAlign="center"
 //             height="100%"
@@ -188,7 +188,7 @@ app.frame('/', (c) => {
 //         <Box
 //             grow
 //             alignVertical="center"
-//             backgroundColor="bg"
+//             backgroundColor="black"
 //             padding="48"
 //             textAlign="center"
 //             height="100%"
@@ -239,7 +239,7 @@ app.frame('/search', async (c) => {
       <Box
           grow
           alignVertical="center"
-          backgroundColor="bg"
+          backgroundColor="black"
           padding="48"
           textAlign="center"
           height="100%"
@@ -316,7 +316,7 @@ app.frame('/result/:username', async (c) => {
             grow
             alignVertical="center"
             backgroundImage={`url(${BG_IMAGE})`}
-            backgroundColor="bg"
+            backgroundColor="black"
             padding="48"
             textAlign="center"
             width="100%"
@@ -377,7 +377,7 @@ app.frame('/result/:username', async (c) => {
         <Box
             grow
             alignVertical="center"
-            backgroundColor="bg"
+            backgroundColor="black"
             padding="48"
             textAlign="center"
             height="100%"
