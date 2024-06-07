@@ -8,7 +8,7 @@ export const { Box, Columns, Column, Image, Heading, Text, VStack, Spacer, vars 
     red: "rgb(253,39,74)",
     tosca: "rgb(167,210,210)",
     yellow: 'rgb(247,169,72)',
-    purple: 'rgb(60,59,110)',
+    purple: 'rgb(117,89,236)',
     blue: 'rgb(17,54,93)',
     grey: 'rgba(128, 128, 128, 0.75)',
     metalPink : 'rgb(195,141,147)',

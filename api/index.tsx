@@ -227,7 +227,7 @@ app.frame('/builder-score-frame/:castFid', async (c) => {
         <Box
             grow
             alignVertical="center"
-            backgroundColor="red"
+            backgroundColor="black"
             padding="48"
             textAlign="center"
             height="100%"
