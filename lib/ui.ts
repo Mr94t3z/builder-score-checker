@@ -11,7 +11,8 @@ export const { Box, Columns, Column, Image, Heading, Text, VStack, Spacer, vars 
     purple: 'rgb(60,59,110)',
     blue: 'rgb(17,54,93)',
     grey: 'rgba(128, 128, 128, 0.75)',
-    metalPink : 'rgb(195,141,147)'
+    metalPink : 'rgb(195,141,147)',
+    bg : 'rgb(23,24,26)'
   },
   fonts: {
     default: [

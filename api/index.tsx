@@ -26,6 +26,11 @@ export const app = new Frog({
   assetsPath: '/',
   basePath: '/api/frame',
   ui: { vars },
+  imageAspectRatio: '1.91:1',
+  imageOptions: {
+    height: 600,
+    width: 600,
+  },
   browserLocation: CAST_INTENS,
 }).use(
   neynar({
@@ -272,7 +277,7 @@ app.frame('/search', async (c) => {
     intents: [ 
       // <TextInput placeholder="Talent Passport ID e.g 401992" />,
       <Button action={`/result/${username}`}>Yes, please!</Button>,
-      <Button action='/'>Nope</Button>,
+      <Button action='/'>No, sorry!</Button>,
     ]
   })
 })
@@ -300,7 +305,8 @@ app.frame('/result/:username', async (c) => {
     // Log the entire data
     // console.log('Entire Data:', data);
 
-    const username = data.passport.passport_profile.display_name;
+    const name = data.passport.passport_profile.display_name;
+    const username = data.passport.passport_profile.name;
     const image = data.passport.passport_profile.image_url;
     const score = data.passport.score;
 
@@ -310,8 +316,10 @@ app.frame('/result/:username', async (c) => {
             grow
             alignVertical="center"
             backgroundImage={`url(${BG_IMAGE})`}
+            backgroundColor="black"
             padding="48"
             textAlign="center"
+            width="100%"
             height="100%"
         >
             <VStack gap="4">
@@ -340,10 +348,10 @@ app.frame('/result/:username', async (c) => {
                 <Spacer size="10" />
                   <Box flexDirection="column" alignHorizontal="left">
                     <Text color="white" align="left" size="14">
-                      {username}
+                      {name}
                     </Text>
                     <Text color="grey" align="left" size="12">
-                      Talent Passport ID #{id}
+                      @{username}
                     </Text>
                   </Box>
                 </Box>
