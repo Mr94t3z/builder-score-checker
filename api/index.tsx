@@ -19,6 +19,8 @@ const CAST_INTENS =
 // Public URL
 const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:5173'
 
+const BG_IMAGE = `${NEXT_PUBLIC_URL}/bg.jpg`
+
 
 export const app = new Frog({
   assetsPath: '/',
@@ -27,7 +29,7 @@ export const app = new Frog({
   browserLocation: CAST_INTENS,
 }).use(
   neynar({
-    apiKey: 'NEYNAR_FROG_FM',
+    apiKey: 'NEYNAR_API_DOCS',
     features: ['interactor', 'cast'],
   }),
 )
@@ -37,10 +39,10 @@ export const app = new Frog({
 
 // Initial frame
 app.frame('/', (c) => {
-  const { username } = c.var.interactor || {}
-    // console.log('cast: ', c.var.cast)
-    // console.log('interactor: ', c.var.interactor)
-    console.log('Username ', username)
+  // const { username } = c.var.interactor || {}
+  //   // console.log('cast: ', c.var.cast)
+  //   // console.log('interactor: ', c.var.interactor)
+  //   console.log('Username ', username)
   return c.res({
     image: (
       <Box
@@ -307,8 +309,7 @@ app.frame('/result/:username', async (c) => {
         <Box
             grow
             alignVertical="center"
-            backgroundColor="black"
-            backgroundImage={`url(${NEXT_PUBLIC_URL}/bg.jpg)`}
+            backgroundImage={`url(${BG_IMAGE})`}
             padding="48"
             textAlign="center"
             height="100%"
