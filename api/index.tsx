@@ -21,7 +21,6 @@ const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:5173'
 
 const BG_IMAGE = `${NEXT_PUBLIC_URL}/bg.jpg`
 
-
 export const app = new Frog({
   assetsPath: '/',
   basePath: '/api/frame',
@@ -39,7 +38,20 @@ export const app = new Frog({
   }),
 )
 
-
+// Define a function to determine the skill level based on the score
+function getSkillLevel(score: number) {
+  if (score < 20) {
+    return "Newbie";
+  } else if (score < 40) {
+    return "Beginner";
+  } else if (score < 60) {
+    return "Competent";
+  } else if (score < 80) {
+    return "Proficient";
+  } else {
+    return "Expert";
+  }
+}
 
 
 // Initial frame
@@ -87,7 +99,7 @@ app.frame('/', (c) => {
       <Button action='/search'>Start</Button>,
       <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
       // <Button.AddCastAction action='/builder-score'>
-      //   Install Action ↓
+      //   Install Action
       // </Button.AddCastAction>,
     ]
   })
@@ -300,6 +312,9 @@ app.frame('/result/:eth_address', async (c) => {
     const image = data.passport.passport_profile.image_url;
     const score = data.passport.score;
 
+    // Get the skill level based on the score
+    const skillLevel = getSkillLevel(score);
+
     return c.res({
       image: (
         <Box
@@ -324,7 +339,7 @@ app.frame('/result/:eth_address', async (c) => {
                     Talent Protocol
                   </Text>
                 </Box>
-                <Spacer size="22" />
+                <Spacer size="12" />
                 <Box flexDirection="row" alignHorizontal="center" alignVertical="center">
                 <Image
                   borderRadius="38"
@@ -343,14 +358,9 @@ app.frame('/result/:eth_address', async (c) => {
                     </Text>
                   </Box>
                 </Box>
-                <Spacer size="22" />
-                <Text color="grey" align="center" size="18">[ Beginner ]</Text>
-                <Spacer size="10" />
-                <Box flexDirection="row" justifyContent="center">
-                    <Text color="metalPink" align="center" size="48">{score}</Text>
-                    <Spacer size="10" />
-                    <Text color="grey" align="center" size="14"> pts.</Text>
-                </Box>
+                <Text color="metalPink" align="center" size="64">{score}</Text>
+                <Text color="white" align="center" size="18">Builder Score</Text>
+                <Text color="grey" align="center" size="16">{skillLevel}</Text>
             </VStack>
         </Box>
       ),
