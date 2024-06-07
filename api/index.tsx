@@ -14,13 +14,23 @@ dotenv.config();
 
 // Browser Location
 const CAST_INTENS = 
-  "https://warpcast.com/~/compose?text=&embeds[]=https://builder-score-checker.vercel.app/api/frame"
+  "https://warpcast.com/~/compose?text=&embeds[]=https://builder-score-checker.vercel.app/api/frame";
+
 
 // Public URL
-const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:5173'
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:5173';
 
+
+// Background Image
 const BG_IMAGE = `${NEXT_PUBLIC_URL}/bg.jpg`
 
+
+// Base URL
+const baseUrlNeynarV2 = process.env.BASE_URL_NEYNAR_V2;
+const baseUrlTalentProtocol = process.env.BASE_URL_TALENT_PROTOCOL;
+
+
+// Initialize Frog App
 export const app = new Frog({
   assetsPath: '/',
   basePath: '/api/frame',
@@ -33,10 +43,11 @@ export const app = new Frog({
   browserLocation: CAST_INTENS,
 }).use(
   neynar({
-    apiKey: 'NEYNAR_API_DOCS',
+    apiKey: process.env.NEYNAR_API_KEY || '',
     features: ['interactor', 'cast'],
   }),
 )
+
 
 // Define a function to determine the skill level based on the score
 function getSkillLevel(score: number) {
@@ -97,142 +108,162 @@ app.frame('/', (c) => {
     ),
     intents: [
       <Button action='/search'>Start</Button>,
-      <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
-      // <Button.AddCastAction action='/builder-score'>
-      //   Install Action
-      // </Button.AddCastAction>,
+      <Button.AddCastAction action='/builder-score'>
+        Install Action
+      </Button.AddCastAction>,
     ]
   })
 })
 
 
-// app.castAction(
-//   '/builder-score',
-//   (c) => {
-//     // Stringify the entire castId object
-//     const castId = JSON.stringify(c.actionData.castId);
+app.castAction(
+  '/builder-score',
+  (c) => {
+    // Stringify the entire castId object
+    const castId = JSON.stringify(c.actionData.castId);
 
-//     // Parse the message back to an object to extract fid
-//     const parsedCastId = JSON.parse(castId);
-//     const castFid = parsedCastId.fid;
+    // Parse the message back to an object to extract fid
+    const parsedCastId = JSON.parse(castId);
+    const castFid = parsedCastId.fid;
 
-//     return c.frame({ path: `/builder-score-frame/${castFid}`})
-//   }, 
-//   { name: "Builder Score Checker", icon: "shield-check", description: "A Builder Score Checker built with Talent Protocol."}
-// )
+    return c.frame({ path: `/builder-score-frame/${castFid}`})
+  }, 
+  { name: "Builder Score", icon: "shield-check", description: "A Cast Action to check the Builder Score, powered by Talent Protocol.", aboutUrl: "https://passport.talentprotocol.com/"}
+)
 
 
-// app.frame('/builder-score-frame/:castFid', async (c) => {
-//   const { castFid } = c.req.param();
+app.frame('/builder-score-frame/:castFid', async (c) => {
+  const { castFid } = c.req.param();
 
-//   try {
-//     // Fetch API by Talent Passport ID
-//     const response = await fetch(`https://api.talentprotocol.com/api/v2/passports/${id}`);
+  try {
+    const responseUser = await fetch(`${baseUrlNeynarV2}/user/bulk?fids=${castFid}`, {
+      method: 'GET',
+      headers: {
+          'accept': 'application/json',
+          'api_key': process.env.NEYNAR_API_KEY || '',
+      },
+    });
+
+    const userFarcasterData = await responseUser.json();
+    const userData = userFarcasterData.users[0];
+
+    const eth_address = userData.verified_addresses.eth_addresses.toString().toLowerCase();
+
+    // Fetch API by Talent Passport ID
+    const response = await fetch(`${baseUrlTalentProtocol}/${eth_address}`);
     
-//     // Check if the response is ok (status code 200-299)
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok ' + response.statusText);
-//     }
+    // Check if the response is ok (status code 200-299)
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
     
-//     // Parse the JSON from the response
-//     const data = await response.json();
+    // Parse the JSON from the response
+    const data = await response.json();
     
-//     // Log the entire data
-//     // console.log('Entire Data:', data);
+    const name = data.passport.passport_profile.display_name;
+    const username = data.passport.passport_profile.name;
+    const image = data.passport.passport_profile.image_url;
+    const score = data.passport.score;
 
-//     const username = data.passport.passport_profile.name;
-//     const score = data.passport.score;
+    // Get the skill level based on the score
+    const skillLevel = getSkillLevel(score);
 
-//     return c.res({
-//       image: (
-//         <Box
-//             grow
-//             alignVertical="center"
-//             backgroundColor="black"
-//             padding="48"
-//             textAlign="center"
-//             height="100%"
-//         >
-//             <VStack gap="4">
-//                 <Box flexDirection="row">
-//                   <Image
-//                       height="24"
-//                       objectFit="cover"
-//                       src="/talent-protocol.png"
-//                     />
-//                   <Spacer size="10" />
-//                   <Text color="grey" decoration="underline" align="center" size="14">
-//                     Talent Protocol
-//                   </Text>
-//                 </Box>
-//                 <Spacer size="16" />
-//                 <Heading color="white" weight="900" align="center" size="32">
-//                   Builder Score
-//                 </Heading>
-//                 <Spacer size="22" />
-//                 <Text color="metalPink" align="center" size="16">Beginner</Text>
-//                 <Spacer size="10" />
-//                 <Box flexDirection="row" justifyContent="center">
-//                     <Text color="grey" align="center" size="16">@{username} have score</Text>
-//                     <Spacer size="10" />
-//                     <Text color="metalPink" align="center" size="16"> {score} 🎟️</Text>
-//                 </Box>
-//                 <Spacer size="22" />
-//                 <Box flexDirection="row" justifyContent="center">
-//                     <Text color="white" align="center" size="14">created by</Text>
-//                     <Spacer size="10" />
-//                     <Text color="grey" decoration="underline" align="center" size="14"> @0x94t3z</Text>
-//                 </Box>
-//             </VStack>
-//         </Box>
-//       ),
-//       intents: [
-//         <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
-//       ]
-//     });
-//   } catch (error) {
-//     return c.res({
-//       image: (
-//         <Box
-//             grow
-//             alignVertical="center"
-//             backgroundColor="black"
-//             padding="48"
-//             textAlign="center"
-//             height="100%"
-//         >
-//             <VStack gap="4">
-//                 <Box flexDirection="row">
-//                   <Image
-//                       height="24"
-//                       objectFit="cover"
-//                       src="/talent-protocol.png"
-//                     />
-//                   <Spacer size="10" />
-//                   <Text color="grey" decoration="underline" align="center" size="14">
-//                     Talent Protocol
-//                   </Text>
-//                 </Box>
-//                 <Spacer size="16" />
-//                 <Heading color="white" weight="900" align="center" size="32">
-//                   ⚠️ Error ⚠️
-//                 </Heading>
-//                 <Spacer size="22" />
-//                 <Text align="center" color="grey" size="16">
-//                    Uh oh, Talent Passport ID not found!
-//                 </Text>
-//                 <Spacer size="22" />
-//                 <Box flexDirection="row" justifyContent="center">
-//                     <Text color="white" align="center" size="14">created by</Text>
-//                     <Spacer size="10" />
-//                     <Text color="grey" decoration="underline" align="center" size="14"> @0x94t3z</Text>
-//                 </Box>
-//             </VStack>
-//         </Box>
-//       ),
-//     });
-//   }
-// })
+    return c.res({
+      image: (
+        <Box
+            grow
+            alignVertical="center"
+            backgroundImage={`url(${BG_IMAGE})`}
+            backgroundColor="black"
+            padding="48"
+            textAlign="center"
+            width="100%"
+            height="100%"
+        >
+            <VStack gap="4">
+                <Box flexDirection="row">
+                  <Image
+                      height="24"
+                      objectFit="cover"
+                      src="/talent-protocol.png"
+                    />
+                  <Spacer size="10" />
+                  <Text color="grey" decoration="underline" align="center" size="14">
+                    Talent Protocol
+                  </Text>
+                </Box>
+                <Spacer size="12" />
+                <Box flexDirection="row" alignHorizontal="center" alignVertical="center">
+                <Image
+                  borderRadius="38"
+                  height="56"
+                  width="56"
+                  objectFit="cover"
+                  src={image}
+                />
+                <Spacer size="12" />
+                  <Box flexDirection="column" alignHorizontal="left">
+                    <Text color="white" align="left" size="16">
+                      {name}
+                    </Text>
+                    <Text color="grey" align="left" size="12">
+                      @{username}
+                    </Text>
+                  </Box>
+                </Box>
+                <Text color="metalPink" align="center" size="64">{score}</Text>
+                <Text color="white" align="center" size="18">Builder Score</Text>
+                <Text color="grey" align="center" size="16">{skillLevel}</Text>
+            </VStack>
+        </Box>
+      ),
+      intents: [
+        <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20%F0%9F%8E%AF%0AFrame%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${eth_address}`}>Share on Warpcast</Button.Link>,
+      ]
+    });
+  } catch (error) {
+    return c.res({
+      image: (
+        <Box
+            grow
+            alignVertical="center"
+            backgroundColor="black"
+            padding="48"
+            textAlign="center"
+            height="100%"
+        >
+            <VStack gap="4">
+                <Box flexDirection="row">
+                  <Image
+                      height="24"
+                      objectFit="cover"
+                      src="/talent-protocol.png"
+                    />
+                  <Spacer size="10" />
+                  <Text color="grey" decoration="underline" align="center" size="14">
+                    Talent Protocol
+                  </Text>
+                </Box>
+                <Spacer size="16" />
+                <Heading color="white" weight="900" align="center" size="32">
+                  ⚠️ Failed ⚠️
+                </Heading>
+                <Spacer size="22" />
+                <Text align="center" color="grey" size="16">
+                   Uh oh, this user needs to sign up first!
+                </Text>
+                <Spacer size="22" />
+                <Box flexDirection="row" justifyContent="center">
+                    <Text color="white" align="center" size="14">created by</Text>
+                    <Spacer size="10" />
+                    <Text color="grey" decoration="underline" align="center" size="14"> @0x94t3z</Text>
+                </Box>
+            </VStack>
+        </Box>
+      ),
+    });
+  }
+})
 
 
 app.frame('/search', async (c) => {
@@ -294,7 +325,7 @@ app.frame('/result/:eth_address', async (c) => {
 
   try {
     // Fetch API by Talent Passport ID
-    const response = await fetch(`https://api.talentprotocol.com/api/v2/passports/${eth_address}`);
+    const response = await fetch(`${baseUrlTalentProtocol}/${eth_address}`);
     
     // Check if the response is ok (status code 200-299)
     if (!response.ok) {
@@ -303,9 +334,6 @@ app.frame('/result/:eth_address', async (c) => {
     
     // Parse the JSON from the response
     const data = await response.json();
-    
-    // Log the entire data
-    // console.log('Entire Data:', data);
 
     const name = data.passport.passport_profile.display_name;
     const username = data.passport.passport_profile.name;
@@ -398,7 +426,7 @@ app.frame('/result/:eth_address', async (c) => {
                 </Heading>
                 <Spacer size="22" />
                 <Text align="center" color="grey" size="16">
-                   Uh oh, you need to sign-up first!
+                   Uh oh, you need to sign up first!
                 </Text>
                 <Spacer size="22" />
                 <Box flexDirection="row" justifyContent="center">
