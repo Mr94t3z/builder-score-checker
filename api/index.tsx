@@ -44,10 +44,6 @@ export const app = new Frog({
 
 // Initial frame
 app.frame('/', (c) => {
-  // const { username } = c.var.interactor || {}
-  //   // console.log('cast: ', c.var.cast)
-  //   // console.log('interactor: ', c.var.interactor)
-  //   console.log('Username ', username)
   return c.res({
     image: (
       <Box
@@ -228,12 +224,11 @@ app.frame('/', (c) => {
 
 
 app.frame('/search', async (c) => {
-  // const { username } = c.var.interactor || {}
-  //   console.log('cast: ', c.var.cast)
-  //   console.log('interactor: ', c.var.interactor)
-  //   console.log('Username ', username)
+  const { verifiedAddresses } = c.var.interactor || {}
 
-  const username = 401992;
+  const ethAddresses = verifiedAddresses?.ethAddresses[0] || [];
+
+  const eth_address = ethAddresses;
   return c.res({
     image: (
       <Box
@@ -275,24 +270,19 @@ app.frame('/search', async (c) => {
       </Box>
     ),
     intents: [ 
-      // <TextInput placeholder="Talent Passport ID e.g 401992" />,
-      <Button action={`/result/${username}`}>Yes, please!</Button>,
+      <Button action={`/result/${eth_address}`}>Yes, please!</Button>,
       <Button action='/'>No, sorry!</Button>,
     ]
   })
 })
 
 
-app.frame('/result/:username', async (c) => {
-  // const { inputText } = c;
-
-  const { username } = c.req.param();
-
-  const id = username;
+app.frame('/result/:eth_address', async (c) => {
+  const { eth_address } = c.req.param();
 
   try {
     // Fetch API by Talent Passport ID
-    const response = await fetch(`https://api.talentprotocol.com/api/v2/passports/${id}`);
+    const response = await fetch(`https://api.talentprotocol.com/api/v2/passports/${eth_address}`);
     
     // Check if the response is ok (status code 200-299)
     if (!response.ok) {
@@ -342,12 +332,10 @@ app.frame('/result/:username', async (c) => {
                   width="56"
                   objectFit="cover"
                   src={image}
-                  // borderColor="rgb(195,141,147)"
-                  // borderWidth="2"
                 />
-                <Spacer size="10" />
+                <Spacer size="12" />
                   <Box flexDirection="column" alignHorizontal="left">
-                    <Text color="white" align="left" size="14">
+                    <Text color="white" align="left" size="16">
                       {name}
                     </Text>
                     <Text color="grey" align="left" size="12">
@@ -368,7 +356,7 @@ app.frame('/result/:username', async (c) => {
       ),
       intents: [
         <Button action='/search'>Try it</Button>,
-        <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20%F0%9F%8E%AF%0AFrame%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${id}`}>Share</Button.Link>,
+        <Button.Link href={`https://warpcast.com/~/compose?text=My%20Builder%20Score%20%F0%9F%8E%AF%0AFrame%20by%20@0x94t3z.eth&embeds[]=https://builder-score-checker.vercel.app/api/frame/result/${eth_address}`}>Share</Button.Link>,
       ]
     });
   } catch (error) {
