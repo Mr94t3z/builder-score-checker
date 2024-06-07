@@ -12,8 +12,12 @@ import dotenv from 'dotenv';
 // Load environment variables from .env file
 dotenv.config();
 
+// Browser Location
 const CAST_INTENS = 
   "https://warpcast.com/~/compose?text=&embeds[]=https://builder-score-checker.vercel.app/api/frame"
+
+// Public URL
+const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL || 'http://localhost:5173'
 
 
 export const app = new Frog({
@@ -27,6 +31,8 @@ export const app = new Frog({
     features: ['interactor', 'cast'],
   }),
 )
+
+
 
 
 // Initial frame
@@ -292,7 +298,7 @@ app.frame('/result/:username', async (c) => {
     // Log the entire data
     // console.log('Entire Data:', data);
 
-    const username = data.passport.passport_profile.name;
+    const username = data.passport.passport_profile.display_name;
     const image = data.passport.passport_profile.image_url;
     const score = data.passport.score;
 
@@ -302,6 +308,7 @@ app.frame('/result/:username', async (c) => {
             grow
             alignVertical="center"
             backgroundColor="black"
+            backgroundImage={`url(${NEXT_PUBLIC_URL}/bg.jpg)`}
             padding="48"
             textAlign="center"
             height="100%"
@@ -321,16 +328,23 @@ app.frame('/result/:username', async (c) => {
                 <Spacer size="22" />
                 <Box flexDirection="row" alignHorizontal="center" alignVertical="center">
                 <Image
-                    borderRadius="38"
-                    height="48"
-                    width="48"
-                    objectFit="cover"
-                    src={image}
-                  />
+                  borderRadius="38"
+                  height="56"
+                  width="56"
+                  objectFit="cover"
+                  src={image}
+                  // borderColor="rgb(195,141,147)"
+                  // borderWidth="2"
+                />
                 <Spacer size="10" />
-                <Text color="metalPink" align="center" size="12">
-                  @{username}
-                </Text>
+                  <Box flexDirection="column" alignHorizontal="left">
+                    <Text color="white" align="left" size="14">
+                      {username}
+                    </Text>
+                    <Text color="grey" align="left" size="12">
+                      Talent Passport ID #{id}
+                    </Text>
+                  </Box>
                 </Box>
                 <Spacer size="22" />
                 <Text color="grey" align="center" size="18">[ Beginner ]</Text>
