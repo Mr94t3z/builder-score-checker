@@ -315,7 +315,7 @@ app.frame('/result/:username', async (c) => {
         <Box
             grow
             alignVertical="center"
-            backgroundImage={`url(${BG_IMAGE})`}
+            // backgroundImage={`url(${BG_IMAGE})`}
             backgroundColor="black"
             padding="48"
             textAlign="center"
