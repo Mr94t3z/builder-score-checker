@@ -323,7 +323,7 @@ app.frame('/search', async (c) => {
     ),
     intents: [ 
       <Button action={`/result/${eth_address}`}>Yes, please!</Button>,
-      <Button action='/'>No, sorry!</Button>,
+      <Button action='/'>No</Button>,
     ]
   })
 })
