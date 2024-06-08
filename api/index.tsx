@@ -149,8 +149,13 @@ app.frame('/builder-score-frame/:castFid', async (c) => {
 
     const eth_address = userData.verified_addresses.eth_addresses.toString().toLowerCase();
 
-    // Fetch API by Talent Passport ID
-    const response = await fetch(`${baseUrlTalentProtocol}/${eth_address}`);
+    // Fetch API by Connect Wallet Address
+    const response = await fetch(`${baseUrlTalentProtocol}/${eth_address}`, {
+      method: 'GET',
+      headers: {
+          'X-API-KEY': process.env.TALENT_PROTOCOL_API_KEY || '',
+      }
+    });
     
     // Check if the response is ok (status code 200-299)
     if (!response.ok) {
@@ -333,8 +338,13 @@ app.frame('/result/:eth_address', async (c) => {
   const { eth_address } = c.req.param();
 
   try {
-    // Fetch API by Talent Passport ID
-    const response = await fetch(`${baseUrlTalentProtocol}/${eth_address}`);
+    // Fetch API by Connect Wallet Address
+    const response = await fetch(`${baseUrlTalentProtocol}/${eth_address}`, {
+      method: 'GET',
+      headers: {
+          'X-API-KEY': process.env.TALENT_PROTOCOL_API_KEY || '',
+      }
+    });
     
     // Check if the response is ok (status code 200-299)
     if (!response.ok) {
