@@ -466,7 +466,7 @@ app.frame('/result/:eth_address', async (c) => {
         </Box>
       ),
       intents: [
-        <Button action='/search'>Try again ⏏︎</Button>,
+        <Button action='/search'>Try again</Button>,
         <Button.Link href='https://passport.talentprotocol.com/signin'>Register</Button.Link>,
       ]
     });
