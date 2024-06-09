@@ -189,6 +189,7 @@ app.frame('/builder-score-frame/:castFid', async (c) => {
                 <Box flexDirection="row">
                   <Image
                       height="24"
+                      borderRadius="12"
                       objectFit="cover"
                       src="/talent-protocol.png"
                     />
@@ -378,6 +379,7 @@ app.frame('/result/:eth_address', async (c) => {
                 <Box flexDirection="row">
                   <Image
                       height="24"
+                      borderRadius="12"
                       objectFit="cover"
                       src="/talent-protocol.png"
                     />
