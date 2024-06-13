@@ -68,6 +68,7 @@ function getSkillLevel(score: number) {
 // Initial frame
 app.frame('/', (c) => {
   return c.res({
+    title: 'Builder Score Stats',
     image: (
       <Box
           grow
@@ -174,6 +175,7 @@ app.frame('/builder-score-frame/:castFid', async (c) => {
     const skillLevel = getSkillLevel(score);
 
     return c.res({
+      title: 'Builder Score Stats',
       image: (
         <Box
             grow
@@ -364,6 +366,7 @@ app.frame('/result/:eth_address', async (c) => {
     const skillLevel = getSkillLevel(score);
 
     return c.res({
+      title: 'Builder Score Stats',
       image: (
         <Box
             grow
